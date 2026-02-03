@@ -34,6 +34,11 @@ jobs:
       - name: Build
         run: |
           npm run build
+          # Copy widget to dist for public access
+          mkdir -p dist/widget
+          cp -r widget/* dist/widget/ 2>/dev/null || true
+          # Ensure CNAME is in dist
+          cp public/CNAME dist/CNAME 2>/dev/null || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
