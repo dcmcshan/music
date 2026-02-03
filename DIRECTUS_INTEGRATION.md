@@ -36,12 +36,47 @@ If your Directus setup supports custom components:
 <script src="https://music.inquiry.institute/widget/music-widget.js"></script>
 ```
 
+### With Notes (LLM-Friendly)
+
+The widget accepts notes in multiple formats, making it easy for LLMs to generate musical notation:
+
+#### Format 1: Simple Space-Separated (Easiest for LLMs)
+```html
+<div data-music-widget data-notes="C/4 D/4 E/4 F/4 G/4"></div>
+<script src="https://music.inquiry.institute/widget/music-widget.js"></script>
+```
+
+#### Format 2: Pipe-Separated with Durations
+```html
+<div data-music-widget data-notes="C/4,q|D/4,q|E/4,q|F/4,q"></div>
+<script src="https://music.inquiry.institute/widget/music-widget.js"></script>
+```
+
+#### Format 3: JSON Array (Full Control)
+```html
+<div data-music-widget 
+     data-notes='[{"note":"C/4","duration":"q"},{"note":"D/4","duration":"q"},{"note":"E/4","duration":"q"}]'>
+</div>
+<script src="https://music.inquiry.institute/widget/music-widget.js"></script>
+```
+
+#### Format 4: Individual Attributes
+```html
+<div data-music-widget 
+     data-notes="C/4 D/4 E/4"
+     data-clef="treble"
+     data-key="C"
+     data-time="4/4">
+</div>
+<script src="https://music.inquiry.institute/widget/music-widget.js"></script>
+```
+
 ### Configuration Parameters
 
 - `clef`: `"treble"`, `"bass"`, `"alto"`, `"tenor"` (default: `"treble"`)
 - `key`: Key signature like `"C"`, `"G"`, `"F"`, `"D"`, etc. (default: `"C"`)
 - `time`: Time signature like `"4/4"`, `"3/4"`, `"2/4"` (default: `"4/4"`)
-- `notes`: Array of initial notes (optional)
+- `notes`: Notes in various formats (see LLM_USAGE.md for details)
 
 ### Example with Initial Notes
 
@@ -175,8 +210,20 @@ For a full-page music room in Directus:
 </html>
 ```
 
+## LLM Integration
+
+For LLM-generated musical notation, see **LLM_USAGE.md** for detailed examples and formats.
+
+Quick example for LLMs:
+```html
+<!-- LLM can generate this simple format -->
+<div data-music-widget data-notes="C/4 D/4 E/4 F/4 G/4"></div>
+<script src="https://music.inquiry.institute/widget/music-widget.js"></script>
+```
+
 ## Support
 
 - Widget URL: https://music.inquiry.institute/widget/music-widget.js
 - Demo: https://music.inquiry.institute/widget/demo.html
+- LLM Guide: See `LLM_USAGE.md` for LLM integration examples
 - Repository: https://github.com/dcmcshan/music
