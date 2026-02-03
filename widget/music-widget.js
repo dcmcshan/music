@@ -344,9 +344,94 @@
     return MusicWidget;
   }
 
+  // Parse notes from various formats
+  function parseNotes(input) {
+    if (!input) return null;
+    
+    // If it's already an array, return it
+    if (Array.isArray(input)) {
+      return input;
+    }
+    
+    // If it's a string, try to parse it
+    if (typeof input === 'string') {
+      try {
+        // Try JSON parse first
+        const parsed = JSON.parse(input);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+        // If it's an object with notes property
+        if (parsed.notes && Array.isArray(parsed.notes)) {
+          return parsed.notes;
+        }
+      } catch (e) {
+        // Not JSON, try comma-separated format: "C/4,q|D/4,q|E/4,q"
+        if (input.includes('|')) {
+          return input.split('|').map(noteStr => {
+            const [note, duration = 'q'] = noteStr.split(',');
+            return { note: note.trim(), duration: duration.trim() };
+          });
+        }
+        // Try space-separated: "C/4 D/4 E/4"
+        const notes = input.split(/\s+/).filter(n => n).map(note => ({
+          note: note.trim(),
+          duration: 'q' // default to quarter note
+        }));
+        if (notes.length > 0) return notes;
+      }
+    }
+    
+    return null;
+  }
+
+  // Parse configuration from container element
+  function parseConfig(container) {
+    const config = {};
+    
+    // Parse from data-config attribute (full JSON config)
+    if (container.dataset.config) {
+      try {
+        const parsed = JSON.parse(container.dataset.config);
+        Object.assign(config, parsed);
+      } catch (e) {
+        console.warn('Failed to parse data-config:', e);
+      }
+    }
+    
+    // Parse individual data attributes (for easier LLM usage)
+    if (container.dataset.clef) config.clef = container.dataset.clef;
+    if (container.dataset.key) config.key = container.dataset.key;
+    if (container.dataset.time) config.time = container.dataset.time;
+    
+    // Parse notes from data-notes attribute (supports multiple formats)
+    if (container.dataset.notes) {
+      const notes = parseNotes(container.dataset.notes);
+      if (notes) {
+        config.notes = notes;
+      }
+    }
+    
+    // Parse from URL parameters (for easy sharing)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('notes')) {
+      const notes = parseNotes(urlParams.get('notes'));
+      if (notes) {
+        config.notes = notes;
+      }
+    }
+    if (urlParams.get('clef')) config.clef = urlParams.get('clef');
+    if (urlParams.get('key')) config.key = urlParams.get('key');
+    if (urlParams.get('time')) config.time = urlParams.get('time');
+    
+    return config;
+  }
+
   // Initialize widget when DOM is ready
-  function initWidget() {
-    const containers = document.querySelectorAll('[data-music-widget], #music-widget-container');
+  function initWidget(containerId = null, customConfig = null) {
+    const containers = containerId 
+      ? [document.getElementById(containerId)].filter(Boolean)
+      : document.querySelectorAll('[data-music-widget], #music-widget-container');
     
     if (containers.length === 0) {
       console.warn('Music widget: No container found. Add <div id="music-widget-container"></div> or <div data-music-widget></div>');
@@ -358,7 +443,8 @@
         const MusicWidget = createMusicWidget(React, VexFlow);
         
         containers.forEach(container => {
-          const config = container.dataset.config ? JSON.parse(container.dataset.config) : {};
+          // Use custom config if provided, otherwise parse from element/URL
+          const config = customConfig || parseConfig(container);
           const root = ReactDOM.createRoot(container);
           root.render(React.createElement(MusicWidget, { config }));
         });
@@ -378,9 +464,27 @@
     initWidget();
   }
 
-  // Export for manual initialization
+  // Export for manual initialization and programmatic API
   window.MusicWidget = {
     init: initWidget,
     version: WIDGET_VERSION,
+    
+    // Programmatic API for LLMs and scripts
+    render: function(containerId, config) {
+      initWidget(containerId, config);
+    },
+    
+    // Helper to create a musical sequence (for LLM use)
+    createSequence: function(notes, options = {}) {
+      return {
+        clef: options.clef || 'treble',
+        key: options.key || 'C',
+        time: options.time || '4/4',
+        notes: Array.isArray(notes) ? notes : parseNotes(notes) || [],
+      };
+    },
+    
+    // Parse notes from various formats
+    parseNotes: parseNotes,
   };
 })();

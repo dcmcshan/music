@@ -58,6 +58,27 @@
     <div data-music-widget data-config='{"clef":"bass","key":"G"}'></div>
   </div>
 
+  <div class="demo-section">
+    <h2>With Notes (LLM-Friendly)</h2>
+    <p>Simple format:</p>
+    <pre><code>&lt;div data-music-widget data-notes="C/4 D/4 E/4 F/4 G/4"&gt;&lt;/div&gt;</code></pre>
+    <div data-music-widget data-notes="C/4 D/4 E/4 F/4 G/4"></div>
+  </div>
+
+  <div class="demo-section">
+    <h2>With Notes (JSON Format)</h2>
+    <pre><code>&lt;div data-music-widget 
+     data-notes='[{"note":"C/4","duration":"q"},{"note":"E/4","duration":"q"},{"note":"G/4","duration":"q"}]'&gt;
+&lt;/div&gt;</code></pre>
+    <div data-music-widget data-notes='[{"note":"C/4","duration":"q"},{"note":"E/4","duration":"q"},{"note":"G/4","duration":"q"}]'></div>
+  </div>
+
+  <div class="demo-section">
+    <h2>With Notes (Pipe-Separated)</h2>
+    <pre><code>&lt;div data-music-widget data-notes="C/4,q|D/4,q|E/4,q"&gt;&lt;/div&gt;</code></pre>
+    <div data-music-widget data-notes="C/4,q|D/4,q|E/4,q"></div>
+  </div>
+
   <script src="widget/music-widget.js"></script>
 </body>
 </html>
