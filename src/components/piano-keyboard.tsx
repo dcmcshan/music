@@ -1,4 +1,4 @@
-
+'use client'
 
 import { useState, useCallback, useEffect } from 'react'
 import type { MusicalNote } from './musical-staff-editor'
