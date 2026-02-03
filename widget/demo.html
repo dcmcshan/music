@@ -80,5 +80,34 @@
   </div>
 
   <script src="widget/music-widget.js"></script>
+  <script>
+    // Support URL parameters for iframe embedding
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search)
+      const notes = urlParams.get('notes')
+      const clef = urlParams.get('clef')
+      const key = urlParams.get('key')
+      const time = urlParams.get('time')
+      
+      if (notes) {
+        // Find or create container
+        let container = document.getElementById('music-widget-container')
+        if (!container) {
+          container = document.createElement('div')
+          container.id = 'music-widget-container'
+          document.body.insertBefore(container, document.body.firstChild)
+        }
+        
+        // Set attributes for widget
+        container.setAttribute('data-music-widget', '')
+        if (notes) container.setAttribute('data-notes', notes)
+        if (clef) container.setAttribute('data-clef', clef)
+        if (key) container.setAttribute('data-key', key)
+        if (time) container.setAttribute('data-time', time)
+        
+        // Widget will auto-initialize when script loads
+      }
+    })()
+  </script>
 </body>
 </html>
