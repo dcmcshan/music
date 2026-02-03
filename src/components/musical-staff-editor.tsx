@@ -1,7 +1,5 @@
-'use client'
-
 import { useEffect, useRef, useState } from 'react'
-import { Vex } from 'vexflow'
+import * as VexFlow from 'vexflow'
 
 export interface MusicalNote {
   note: string // e.g., "C/4", "D/4", "E/4"
@@ -56,7 +54,7 @@ export function MusicalStaffEditor({
     }
 
     // Create new renderer
-    const { Renderer, Stave, StaveNote, Voice, Formatter } = Vex.Flow
+    const { Renderer, Stave, StaveNote, Voice, Formatter } = VexFlow
 
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG)
     renderer.resize(containerRef.current.clientWidth || 600, height)

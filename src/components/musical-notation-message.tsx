@@ -1,7 +1,5 @@
-'use client'
-
 import { useEffect, useRef } from 'react'
-import { Vex } from 'vexflow'
+import * as VexFlow from 'vexflow'
 import type { MusicalSequence } from './musical-staff-editor'
 
 interface MusicalNotationMessageProps {
@@ -20,7 +18,7 @@ export function MusicalNotationMessage({ sequence, compact = false }: MusicalNot
     if (!containerRef.current || !sequence.notes || sequence.notes.length === 0) return
 
     // Check if VexFlow is available
-    if (typeof window === 'undefined' || !Vex || !Vex.Flow) {
+    if (typeof window === 'undefined' || !VexFlow) {
       console.error('VexFlow not available')
       return
     }
@@ -29,7 +27,7 @@ export function MusicalNotationMessage({ sequence, compact = false }: MusicalNot
     containerRef.current.innerHTML = ''
 
     try {
-      const { Renderer, Stave, StaveNote, Voice, Formatter } = Vex.Flow
+      const { Renderer, Stave, StaveNote, Voice, Formatter } = VexFlow
 
     const width = compact ? 300 : 500
     const height = compact ? 120 : 150
