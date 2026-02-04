@@ -199,12 +199,22 @@ export default function App() {
             </p>
           </div>
           <div className="h-[600px] min-h-[600px]">
-            <iframe
-              src={elementUrl}
-              className="w-full h-full border-0"
-              allow="camera; microphone; fullscreen; autoplay"
-              title="Element Web - Matrix Chat"
-            />
+            <div className="w-full h-full border border-slate-200 rounded-lg bg-slate-50 flex flex-col items-center justify-center">
+              <p className="text-slate-600 mb-4">
+                Matrix chat cannot be embedded due to security restrictions.
+              </p>
+              <a
+                href={elementUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              >
+                Open Matrix Chat in New Window
+              </a>
+              <p className="text-sm text-slate-500 mt-4">
+                Or visit: <code className="text-xs bg-slate-200 px-1 py-0.5 rounded">{roomAlias}</code>
+              </p>
+            </div>
           </div>
         </div>
       </div>
